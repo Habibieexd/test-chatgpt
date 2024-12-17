@@ -3,17 +3,25 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const fetchPosts = async () => {
+// Tipe data untuk setiap post
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+}
+
+const fetchPosts = async (): Promise<Post[]> => {
   const { data } = await axios.get("/api/posts");
   return data;
 };
 
 export default function PostsList() {
+  // Menggunakan tipe data Post[] (array of Post)
   const {
     data: posts = [],
     isLoading,
     isError,
-  } = useQuery({
+  } = useQuery<Post[]>({
     queryKey: ["posts"],
     queryFn: fetchPosts,
   });
@@ -23,8 +31,8 @@ export default function PostsList() {
 
   return (
     <div>
-      {posts.map((post: any) => (
-        <div key={post.id} className="post">
+      {posts.map((post) => (
+        <div key={post.id}>
           <h2>{post.title}</h2>
           <p>{post.content}</p>
         </div>
